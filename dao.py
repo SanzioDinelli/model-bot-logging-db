@@ -71,12 +71,16 @@ class Dao():
         self.cursor.execute(statement, (1, self.last_id))
         self.db.commit()
     
-    def check_condition(self):
+    def check_condition(self, CONDITION):
+        CONDITION = "input" if CONDITION == "" else CONDITION
+
         statement = f'''
-            SELECT * FROM conditions
+            SELECT {CONDITION} FROM conditions
             WHERE DATE(execution_date) = DATE('now', 'localtime')
         '''
+        
         response = self.cursor.execute(statement).fetchone()
+        response = response[0] if response else None
         return response
     
     def save_condition(self, CONDITION):

@@ -1,26 +1,16 @@
 import logging
 from functools import wraps
+import logging.handlers
 from time import time
 from colorama import Fore, Back, Style
 
 class Logger():
     def __init__(self, file_level, stream_level):
-        ### REMOVER O LOGGER DO WEBDRIVER 
-        selenium_logger = logging.getLogger('selenium')
-        selenium_logger.setLevel(level=logging.CRITICAL)
-        selenium_logger.propagate = False
-
-        selenium_webdriver_logger = logging.getLogger('selenium.webdriver')
-        selenium_webdriver_logger.setLevel(level=logging.CRITICAL)
-        selenium_webdriver_logger.propagate = False
-
-        urllib_logger = logging.getLogger('urllib3.connectionpool')
-        urllib_logger.setLevel(logging.CRITICAL)
-        urllib_logger.propagate = False
-
-        selenium_remote_logger = logging.getLogger('selenium.webdriver.remote.remote_connection')
-        selenium_remote_logger.setLevel(logging.CRITICAL)
-        selenium_remote_logger.propagate = False
+        ### REMOVER OS LOGGERS DO FRAMEWORKS
+        loggers = [logging.getLogger(name) for name in logging.root.manager.loggerDict]
+        for logger in loggers:
+            logger.setLevel(logging.CRITICAL)
+            logger.propagate = False
 
         ### DEFINIR O PRÓPRIO LOGGER
         logger = logging.getLogger()
@@ -36,7 +26,17 @@ class Logger():
         stream_formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
         stream_handler.setFormatter(stream_formatter)
 
-        logging.Handler
+        mail_handler  = logging.handlers.SMTPHandler(
+            mailhost = ("smtp.gmail.com", 587),
+            fromaddr = "sanzio.magalhae@gmail.com",
+            toaddrs = ["sanzio.magalhae@gmail.com", "sanzio.magalhaes@hotmail.com"],
+            subject = "Erro na aplicação!",
+            credentials = ("sanzio.magalhae@gmail.com", "lpyk gdww yccm zydb"),
+            secure = ()  # isso ativa o STARTTLS
+        )
+        mail_handler.setLevel(logging.CRITICAL)  # Envia e-mails apenas para logs de erro ou acima
+        mail_formatter = logging.Formatter('[%(asctime)s] %(levelname)s em %(module)s: %(message)s')
+        mail_handler.setFormatter(mail_formatter)
 
         class ColorFilter(logging.Filter):
             def filter(self, record):
@@ -57,17 +57,19 @@ class Logger():
                     record.msg = f"{Back.RED}{record.msg}{Style.RESET_ALL}"
                 return True
 
-        stream_handler.addFilter(ColorFilter())
         
+        logger.addHandler(mail_handler)
         logger.addHandler(file_handler)
+        stream_handler.addFilter(ColorFilter())
         logger.addHandler(stream_handler)
+        
         self.logger = logger
 
     def call_log(self, func):
         @wraps(func) # Preserva os metadados da função original
         def wrapper(*args, **kwargs):
             try:
-                self.logger.debug(f"executando - {__file__.split("\\")[-1]}:{func.__name__}")
+                self.logger.debug(f"executando - {func.__qualname__}")
                 inicio = time()
                 response = func(*args, **kwargs) ### MÉTODO AQUI
                 fim = time()
