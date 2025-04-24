@@ -10,8 +10,8 @@ print(ansi.set_title("Prompt Bot - Modelo"))
 logger_agent = Logger(file_level=0, stream_level=10)
 dao_agent = Dao()
 
-CONDITION_1 = ""
-CONDITION_2 = ""
+CONDITION_1 = "verificar_se_download_foi_feito"
+CONDITION_2 = "verificar_se_relatorio_esta_pronto"
 CONDITION_3 = ""
 CONDITION_99 = ""
 
@@ -32,22 +32,52 @@ class Bot():
     ########################################################################################
     ########################################################################################
     @logger_agent.call_log
-    def task_1(self):
-        if dao_agent.check_condition(CONDITION_99) in (None, False): print(f"{inspect.currentframe().f_code.co_name} - CHECADO"); return True
+    def __task_1__(self):
+        if dao_agent.check_condition(CONDITION_99) not in (None, False): logger_agent.logger.info(f"{inspect.currentframe().f_code.co_name} - CHECADO"); return True
+        print("EXECUTANDO TASK 1")
         ### LÓGICA DA TASK ###
         ...
         ######################
-        print("EXECUTANDO TASK 1")
-        dao_agent.save_condition(CONDITION_99)
-        dao_agent.save_state(inspect.currentframe().f_code.co_name)
+        dao_agent.save_condition(CONDITION_99); dao_agent.save_state(inspect.currentframe().f_code.co_name)
     ########################################################################################
     ########################################################################################
 
-    ...
+
+    @logger_agent.call_log
+    def task_crawler(self):
+        CONDITION = CONDITION_1
+        if dao_agent.check_condition(CONDITION) not in (None, False): logger_agent.logger.info(f"{inspect.currentframe().f_code.co_name} - CHECADO"); return True
+        print("EXECUTANDO TASK CRAWLER")
+        ### LÓGICA DA TASK ###
+        ...
+        ######################
+        dao_agent.save_condition(CONDITION); dao_agent.save_state(inspect.currentframe().f_code.co_name)
+    
+    @logger_agent.call_log
+    def task_xlsx(self):
+        CONDITION = CONDITION_2
+        if dao_agent.check_condition(CONDITION) not in (None, False): logger_agent.logger.info(f"{inspect.currentframe().f_code.co_name} - CHECADO"); return True
+        print("EXECUTANDO TASK XLSX")
+        ### LÓGICA DA TASK ###
+        ...
+        ######################
+        dao_agent.save_condition(CONDITION); dao_agent.save_state(inspect.currentframe().f_code.co_name)
+
+    @logger_agent.call_log
+    def task_slack(self):
+        CONDITION = CONDITION_99
+        if dao_agent.check_condition(CONDITION) not in (None, False): logger_agent.logger.info(f"{inspect.currentframe().f_code.co_name} - CHECADO"); return True
+        print("EXECUTANDO TASK SLACK")
+        ### LÓGICA DA TASK ###
+        ...
+        ######################
+        dao_agent.save_condition(CONDITION); dao_agent.save_state(inspect.currentframe().f_code.co_name)
 
 def main():
     bot = Bot()
-    bot.task_1()
+    bot.task_crawler()
+    bot.task_xlsx()
+    bot.task_slack()
     
 if __name__ == "__main__":
     try:
@@ -55,4 +85,3 @@ if __name__ == "__main__":
     except Exception as error:
         logger_agent.logger.warning(f"Ocorreu um erro muito sério! - {error}") ### Envio de email para nível CRITICAL
 
-    
