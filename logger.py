@@ -41,8 +41,8 @@ class Logger():
         mail_formatter = logging.Formatter('[%(asctime)s] %(levelname)s em %(module)s: %(message)s')
         mail_handler.setFormatter(mail_formatter)
 
-        slack_handler = SlackLogHandler(api_key='xoxb-3583364622678-4605747863751-tZVpOEWn2rCBdPvxrmexVV2O', channel='U078EQ9HED7')
-        slack_handler.setLevel(logging.DEBUG)
+        slack_handler = SlackLogHandler(api_key=os.environ.get("API_SLACK_TOKEN"), channel=os.environ.get("SLACK_CHANNEL"))
+        slack_handler.setLevel(logging.INFO)
         formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
         slack_handler.setFormatter(formatter)
         
@@ -88,7 +88,7 @@ class Logger():
                 return response
             except Exception as error:
                 fim = time()
-                logging.error(f"Erro na função '{func.__name__}': {error}")
+                self.logger.error(f"Erro na função '{func.__name__}': {error}")
                 self.logger.debug(f"encerrando método: duração - {float(fim - inicio):.2f} segundos\n")
         return wrapper
 
