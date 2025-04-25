@@ -41,7 +41,7 @@ class Logger():
         mail_formatter = logging.Formatter('[%(asctime)s] %(levelname)s em %(module)s: %(message)s')
         mail_handler.setFormatter(mail_formatter)
 
-        slack_handler = SlackLogHandler(api_key=os.environ.get("API_SLACK_TOKEN"), channel=os.environ.get("SLACK_CHANNEL"))
+        slack_handler = SlackLogHandler(api_key=os.environ.get("API_TOKEN"), channel=os.environ.get("SLACK_CHANNEL"))
         slack_handler.setLevel(logging.INFO)
         formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
         slack_handler.setFormatter(formatter)
