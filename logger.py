@@ -8,7 +8,6 @@ from dotenv import load_dotenv; load_dotenv(os.path.join(os.getcwd(),".env"))
 
 class Logger():
     def __init__(self, file_level, stream_level):
-        SLACK_ON = False ### HABILITE CASO QUEIRA SER INFORMADO VIA SLACK
         #################################################################################### REMOVER OS LOGGERS DO FRAMEWORKS
         loggers = [logging.getLogger(name) for name in logging.root.manager.loggerDict]
         for logger in loggers:
@@ -41,12 +40,6 @@ class Logger():
         mail_formatter = logging.Formatter('[%(asctime)s] %(levelname)s em %(module)s: %(message)s')
         mail_handler.setFormatter(mail_formatter)
 
-        slack_handler = SlackLogHandler(api_key=os.environ.get("API_SLACK_TOKEN"), channel=os.environ.get("SLACK_CHANNEL"))
-        slack_handler.setLevel(logging.INFO)
-        formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-        slack_handler.setFormatter(formatter)
-        
-
         class ColorFilter(logging.Filter):
             def filter(self, record):
                 if record.levelno == logging.DEBUG:
@@ -71,9 +64,7 @@ class Logger():
         logger.addHandler(file_handler)
         stream_handler.addFilter(ColorFilter())
         logger.addHandler(stream_handler)
-        if SLACK_ON:
-            logger.addHandler(slack_handler) 
-        
+
         self.logger = logger
 
     def call_log(self, func):

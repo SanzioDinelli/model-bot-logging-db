@@ -1,13 +1,13 @@
 # model-bot-logging-db
 
-Este projeto é um modelo de bot que utiliza logging avançado e persistência de dados em um banco SQLite. Ele foi projetado para executar tarefas automatizadas com controle de condições e etapas, além de oferecer suporte a notificações via Slack e e-mail em caso de erros críticos.
+Este projeto é um modelo de bot que utiliza logging avançado e persistência de dados em um banco SQLite. Ele foi projetado para executar tarefas automatizadas com controle de condições e etapas, além de oferecer suporte a notificações via e-mail em caso de erros críticos.
 
 ## Funcionalidades
 
-- **Logging Avançado**: Logs detalhados com níveis configuráveis (arquivo, console, e-mail e Slack).
+- **Logging Avançado**: Logs detalhados com níveis configuráveis (arquivo, console, e-mail).
 - **Persistência de Dados**: Uso de SQLite para armazenar estados e condições de execução.
 - **Automação de Tarefas**: Estrutura modular para adicionar e gerenciar tarefas automatizadas.
-- **Notificações**: Integração com Slack e e-mail para alertas críticos.
+- **Notificações**: Integração com e-mail para alertas críticos.
 
 ## Estrutura do Projeto
 - **.env** # Variáveis de ambiente (ex.: credenciais de e-mail)
@@ -27,8 +27,7 @@ Este projeto é um modelo de bot que utiliza logging avançado e persistência d
 - Dependências adicionais (instaladas via `pip`):
   - `colorama`
   - `python-dotenv`
-  - `slack-sdk`
-
+  
 ## Configuração
 
 1. Clone o repositório:
